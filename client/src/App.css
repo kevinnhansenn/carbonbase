@@ -1,0 +1,65 @@
+@import 'antd/dist/antd.css';
+
+.App {
+  background-color: #F5F5F5;
+  color: #303030;
+}
+
+.App-Page {
+  width: 100vw;
+  height: 100vh; /* Fallback */
+  height: calc(var(--vh, 1vh) * 100);
+  position: relative;
+  transition: all 1s;
+}
+
+.override .ant-btn {
+  width: 100%;
+  background: #5e853a;
+  color: white;
+  font-weight: bold;
+  height: 40px;
+  font-size: 12px;
+}
+
+.override-blue .ant-btn {
+  width: 100%;
+  background: #3a8385;
+  color: white;
+  font-weight: bold;
+  height: 40px;
+  font-size: 12px;
+}
+
+.qrCode {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.qrCode .ant-btn {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+  color: #5e853a;
+}
+
+.blue .ant-btn {
+  color: #3a8385;
+}
+
+.qrCode .ant-btn .anticon {
+  padding-top: 5px;
+  font-size: 5vh;
+}
+
+.ant-modal-body {
+ height: 50vh;
+  overflow: scroll;
+}
+
+
+

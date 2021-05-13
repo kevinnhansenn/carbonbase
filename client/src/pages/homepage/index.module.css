@@ -1,0 +1,130 @@
+.container {
+    height: 100%;
+}
+
+.background {
+    position: absolute;
+    height: 50vh;
+    width: 100vw;
+    padding: 30px;
+    background: #5e853a;
+    border-bottom-left-radius: 20vw;
+    border-bottom-right-radius: 20vw;
+}
+
+.wrapper {
+    position: absolute;
+    padding: 30px;
+    width: 100%;
+}
+
+
+.title {
+    color: white;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: white;
+    font-weight: bold;
+}
+
+.centerCard {
+    border: 1px solid #f0f0f0;
+    margin-top: 30px;
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+    text-align: center;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: transform 0.65s;
+    transform-style: preserve-3d;
+    z-index: 0 !important;
+}
+
+.qrCode {
+    transform: rotateY(180deg) translateZ(1px);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999 !important;
+}
+
+.qrCode canvas{
+    height: 240px !important;
+    width: 240px !important;
+    z-index: 9999 !important;
+}
+
+.personalized {
+    font-size: 12px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+
+.earth {
+    position: absolute;
+    width: 100%;
+    opacity: 0.15;
+    transition: 0.5s;
+}
+
+.greenPoints {
+    font-weight: bold;
+    font-size: 12px;
+    color: #5e853a;
+}
+
+.points {
+    font-size: 65px;
+    font-weight: bold;
+    color: #3e5825;
+    line-height: 1.3;
+}
+
+.actionBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    background: #5e853a;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+.icons {
+    font-size: 4.2vh;
+    padding-top: 2.8vh;
+    height: 100%;
+    width: 150px;
+    /*background-position: center;*/
+    transition: background 0.3s;
+}
+
+
+.icons:hover {
+    background: #5e853a radial-gradient(circle, transparent 1%, #5e853a 1%) center/15000%;
+}
+.icons:active {
+    background-color: #89c358;
+    background-size: 100%;
+    transition: background 0s;
+}
+
+
+
