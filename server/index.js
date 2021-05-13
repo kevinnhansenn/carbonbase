@@ -14,14 +14,14 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://mbwass.com:3000",
   })
 );
 app.use(Router);
 
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://mbwass.com:3000",
   },
 });
 
