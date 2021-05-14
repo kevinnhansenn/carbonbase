@@ -9,7 +9,7 @@ const {
 const { getAllHistory, getHistoryById } = require("./transaction");
 const router = express.Router();
 
-router.get("/*", (req, res, next) => {
+router.get(/(\/home)|(\/admin)|(\/)$/, (req, res, next) => {
   router.use(express.static(path.join(__dirname, "../client/build/")));
 
   const staticFile = "index.html";
