@@ -9,22 +9,6 @@ const {
 const { getAllHistory, getHistoryById } = require("./transaction");
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  router.use(express.static(path.join(__dirname, "../client/build/")));
-
-  const staticFile = "index.html";
-  const options = {
-    root: path.join(__dirname, "../client/build"),
-  };
-
-  res.sendFile(staticFile, options, (err) => {
-    if (err) {
-      console.log(err);
-      next(err);
-    }
-  });
-});
-
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -76,6 +60,22 @@ router.get("/getHistory", (req, res) => {
   });
 
   res.status(200).send(results);
+});
+
+router.get("*", (req, res, next) => {
+  router.use(express.static(path.join(__dirname, "../client/build/")));
+
+  const staticFile = "index.html";
+  const options = {
+    root: path.join(__dirname, "../client/build"),
+  };
+
+  res.sendFile(staticFile, options, (err) => {
+    if (err) {
+      console.log(err);
+      next(err);
+    }
+  });
 });
 
 module.exports = router;
