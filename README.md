@@ -7,4 +7,4 @@
 
 ![](admin.png)
 
-Project has to be run with HTTPS so that we can use the camera feature
+#### <center>	&#169; Mini Project - Kevin Hansen
