@@ -12,7 +12,14 @@ export function Admin() {
   const verify = () => {
     setVerified(true);
 
-    const connection = io();
+    let connection;
+
+    if (process.env.NODE_ENV === "development") {
+      connection = io("localhost:5000");
+    } else {
+      connection = io();
+    }
+
     setSocket(connection);
 
     connection.emit("ADMIN_JOIN", () => {

@@ -12,9 +12,104 @@ import {
   PlusOutlined,
   TransactionOutlined,
 } from "@ant-design/icons";
+import { Column } from "@ant-design/charts";
 import { Button, message, Popover, Spin } from "antd";
 import Modal from "antd/es/modal/Modal";
 import { request } from "../../api";
+
+var data = [
+  {
+    year: "Mon",
+    value: 3,
+    type: "Lon",
+  },
+  {
+    year: "Tue",
+    value: 4,
+    type: "Lon",
+  },
+  {
+    year: "Wed",
+    value: 3,
+    type: "Lon",
+  },
+  {
+    year: "Thu",
+    value: 5,
+    type: "Lon",
+  },
+  {
+    year: "Fri",
+    value: 4,
+    type: "Lon",
+  },
+  {
+    year: "Sat",
+    value: 6,
+    type: "Lon",
+  },
+  {
+    year: "Sun",
+    value: 7,
+    type: "Lon",
+  },
+  {
+    year: "Mon",
+    value: 3,
+    type: "Bor",
+  },
+  {
+    year: "Tue",
+    value: 4,
+    type: "Bor",
+  },
+  {
+    year: "Wed",
+    value: 3,
+    type: "Bor",
+  },
+  {
+    year: "Thu",
+    value: 5,
+    type: "Bor",
+  },
+  {
+    year: "Fri",
+    value: 4,
+    type: "Bor",
+  },
+  {
+    year: "Sat",
+    value: 6,
+    type: "Bor",
+  },
+  {
+    year: "Sun",
+    value: 20,
+    type: "Bor",
+  },
+];
+var config = {
+  data: data,
+  padding: [65, 45, 40, 65],
+  isStack: true,
+  legend: false,
+  xField: "year",
+  yField: "value",
+  seriesField: "type",
+  color: ["#62DAAB", "#EF5350"],
+  label: {
+    style: {
+      fill: "white",
+      fontSize: 14,
+    },
+    position: "middle",
+    layout: [
+      { type: "interval-adjust-position" },
+      { type: "interval-hide-overlap" },
+    ],
+  },
+};
 
 const previewStyle = {
   width: "90%",
@@ -151,8 +246,18 @@ export function Dashboard({ setVerified, socket }) {
       <div className={styles.container}>
         <div className={styles.background} />
         <div className={styles.wrapper}>
-          <div className={styles.title}>Administrator</div>
-          <div className={styles.subtitle}>admin@carbonbase.co</div>
+          <div className={styles.titleColumn}>
+            <div>
+              <div className={styles.administrator}>Admin</div>
+              <div className={styles.subtitle}>admin@carbonbase.co</div>
+            </div>
+            <div>
+              <div className={styles.userText}>REGISTERED USERS</div>
+              <div className={styles.userNum}>
+                <CountUp end={200} />
+              </div>
+            </div>
+          </div>
 
           {qrCodeScanner ? (
             <div className={styles.centerCard} ref={card}>
@@ -227,8 +332,8 @@ export function Dashboard({ setVerified, socket }) {
               ) : (
                 <Fragment>
                   <img className={styles.earth} src={earth} alt="" />
-                  <span className={styles.points}>&#x221e;</span>
-                  <div className={styles.greenPoints}>Green Points</div>
+                  <span className={styles.metric}>Engagement Metrics</span>
+                  <Column {...config} />
                 </Fragment>
               )}
             </div>

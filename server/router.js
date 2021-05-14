@@ -78,4 +78,17 @@ router.get("/getHistory", (req, res) => {
   res.status(200).send(results);
 });
 
+router.get("/getDashboard", (req, res) => {
+  const users = getAllUsers();
+  const count = users.length;
+
+  const transactions = getAllHistory();
+
+  const now = new Date(new Date().toLocaleString("en-HK"));
+
+  now.getTime() - (7 * 24 * 60 * 60 * 1000));
+
+  res.status(200).send(results);
+});
+
 module.exports = router;

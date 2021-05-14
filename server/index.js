@@ -1,5 +1,6 @@
 const app = require("express")();
 const http = require("http").Server(app);
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const Router = require("./router");
 const { updatePoints } = require("./users");
@@ -11,9 +12,18 @@ const { registerSocketId } = require("./users");
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(Router);
 
-const io = require("socket.io")(http);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 
 io.on("connection", (socket) => {
   const id = socket.id;

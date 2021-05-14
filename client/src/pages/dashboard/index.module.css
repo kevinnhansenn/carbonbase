@@ -18,16 +18,40 @@
     width: 100%;
 }
 
-
-.title {
+.titleColumn {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
     color: white;
+}
+
+.administrator {
+    font-weight: bold;
     font-size: 42px;
+}
+
+.subtitle {
     font-weight: bold;
 }
+
+
+.userText {
+    font-weight: bold;
+    text-align: right;
+}
+
+.userNum {
+    font-size: 52px;
+    line-height: 54px;
+    text-align: right;
+}
+
+
 
 .subtitle {
     color: white;
     font-weight: bold;
+    text-align: center;
 }
 
 .centerCard {
@@ -47,6 +71,15 @@
     transition: transform 0.65s;
     transform-style: preserve-3d;
     z-index: 0 !important;
+}
+
+.metric {
+    position: absolute;
+    top: 16px;
+    color: #3a8385;
+    font-weight: bold;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 .qrCode {
@@ -76,7 +109,7 @@
 .earth {
     position: absolute;
     width: 100%;
-    opacity: 0.15;
+    opacity: 0.1;
     transition: 0.5s;
 }
 

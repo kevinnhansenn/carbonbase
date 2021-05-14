@@ -36,7 +36,14 @@ export function Homepage() {
     const parsedAccount = JSON.parse(_account);
     setAccount(parsedAccount);
 
-    const connection = io();
+    let connection;
+
+    if (process.env.NODE_ENV === "development") {
+      connection = io("localhost:5000");
+    } else {
+      connection = io();
+    }
+
     setSocket(connection);
 
     connection.emit("JOIN", parsedAccount.id, (user) => {
