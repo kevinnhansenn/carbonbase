@@ -7,6 +7,10 @@ const { getHistoryById } = require("./transaction");
 const router = express.Router();
 const { checkUserExist } = require("./users");
 
+router.get("/test", (req, res) => {
+  res.status(200).send("OK");
+});
+
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
