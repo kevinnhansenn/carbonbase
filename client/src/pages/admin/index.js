@@ -12,7 +12,7 @@ export function Admin() {
   const verify = () => {
     setVerified(true);
 
-    const connection = io("mbwass.com:5000");
+    const connection = io();
     setSocket(connection);
 
     connection.emit("ADMIN_JOIN", () => {

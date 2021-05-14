@@ -1,14 +1,28 @@
 const express = require("express");
-const { addUser } = require("./users");
-const { checkNameExist } = require("./users");
-const { getAllUsers } = require("./users");
-const { getAllHistory } = require("./transaction");
-const { getHistoryById } = require("./transaction");
+const path = require("path");
+const {
+  addUser,
+  checkNameExist,
+  getAllUsers,
+  checkUserExist,
+} = require("./users");
+const { getAllHistory, getHistoryById } = require("./transaction");
 const router = express.Router();
-const { checkUserExist } = require("./users");
 
-router.get("/test", (req, res) => {
-  res.status(200).send("OK");
+router.get("/", (req, res, next) => {
+  router.use(express.static(path.join(__dirname, "../client/build/")));
+
+  const staticFile = "index.html";
+  const options = {
+    root: path.join(__dirname, "../client/build"),
+  };
+
+  res.sendFile(staticFile, options, (err) => {
+    if (err) {
+      console.log(err);
+      next(err);
+    }
+  });
 });
 
 router.post("/login", (req, res) => {

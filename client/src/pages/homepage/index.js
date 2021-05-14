@@ -36,7 +36,7 @@ export function Homepage() {
     const parsedAccount = JSON.parse(_account);
     setAccount(parsedAccount);
 
-    const connection = io("mbwass.com:5000");
+    const connection = io();
     setSocket(connection);
 
     connection.emit("JOIN", parsedAccount.id, (user) => {
