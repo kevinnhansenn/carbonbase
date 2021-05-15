@@ -42,10 +42,12 @@ const columnConfig = {
 };
 
 const convertTime = (date) => {
-  if (process && process.env && process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     return date;
   }
-  return new Date(new Date(Date.parse(date)).getTime() + 8 * 60 * 60 * 1000);
+  return new Date(
+    new Date(Date.parse(date)).getTime() + 8 * 60 * 60 * 1000
+  ).toLocaleString("en-HK");
 };
 
 const previewStyle = {

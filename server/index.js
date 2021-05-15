@@ -14,9 +14,9 @@ const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
   const cors = require("cors");
   app.use(
-    cors({
+    cors(/*{
       origin: "http://localhost:3000",
-    })
+    }*/)
   );
 }
 
