@@ -13,7 +13,7 @@ export function Authentication() {
 
   const history = useHistory();
 
-  const loginSuccess = (data) => {
+  const loginSuccess = (data, justRegister = false) => {
     const { id, name, email, points } = data;
 
     localStorage.setItem(
@@ -26,7 +26,10 @@ export function Authentication() {
       })
     );
 
-    history.push("/home");
+    history.push({
+      pathname: "/home",
+      state: { justRegister },
+    });
   };
 
   const handleClick = () => {
@@ -49,7 +52,7 @@ export function Authentication() {
         request
           .post("/register", { name, email, password })
           .then((res) => {
-            loginSuccess(res.data);
+            loginSuccess(res.data, true);
           })
           .catch(() => {
             message.error("Name Already Taken");

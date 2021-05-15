@@ -82,6 +82,14 @@
     transform: translate(-50%, 0);
 }
 
+.noData {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #818181;
+}
+
 .qrCode {
     transform: rotateY(180deg) translateZ(1px);
     height: 100%;

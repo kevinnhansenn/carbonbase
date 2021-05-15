@@ -7,10 +7,7 @@ const {
   checkUserExist,
 } = require("./users");
 const { getAllHistory, getHistoryById } = require("./transaction");
-const {
-  frame,
-    dayMap
-} = require("./utils");
+const { frame, dayMap } = require("./utils");
 const router = express.Router();
 
 router.get(/(\/home)|(\/admin)|(\/)$/, (req, res, next) => {
@@ -88,52 +85,59 @@ router.get("/getDashboard", (req, res) => {
 
   const transactions = getAllHistory();
 
-  const now = new Date(new Date().toLocaleString("en-HK"));
+  const now = new Date(new Date().toLocaleString());
 
-  const lastWeek = new Date(now.getTime() - (6 * 24 * 60 * 60 * 1000));
+  const lastWeek = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
 
-  console.log(lastWeek.toLocaleString())
+  const d = lastWeek.getDate();
+  const m = lastWeek.getMonth();
+  const y = lastWeek.getFullYear();
 
-  const d = lastWeek.getDate()
-  const m = lastWeek.getMonth()
-  const y = lastWeek.getFullYear()
+  const starting = new Date(d, m, y);
 
-  const starting = new Date(d, m, y)
+  const day = now.getDay();
 
-  const day = now.getDay()
+  const _frame = JSON.parse(JSON.stringify(frame));
+  const reFrame = _frame.slice(day).concat(_frame.slice(0, day));
 
-  const _frame = frame.slice()
-  const reFrame = _frame.slice(day).concat(_frame.slice(0, day))
+  const _reFrame = JSON.parse(JSON.stringify(reFrame));
 
-  const _reFrame = JSON.parse(JSON.stringify(reFrame))
+  reFrame.forEach((r) => (r.type = "Lon"));
+  _reFrame.forEach((r) => (r.type = "Bor"));
 
-  reFrame.forEach(r => r.type = 'Lon')
-  _reFrame.forEach(r => r.type = 'Bor')
-
-  transactions.forEach(trx => {
-    const parsed = new Date (Date.parse(trx.date))
+  transactions.forEach((trx) => {
+    const parsed = new Date(Date.parse(trx.date));
 
     if (parsed.getTime() >= starting.getTime()) {
-      console.log(parsed.toLocaleString())
-      const _day = dayMap[parsed.getDay()]
+      const _day = dayMap[parsed.getDay()];
 
-      if (trx.action === '+') {
-        reFrame.forEach(r => {
-          if (r.day === _day)  r.total = r.total + 1
-        })
+      if (trx.action === "+") {
+        reFrame.forEach((r) => {
+          if (r.day === _day) r.total = r.total + 1;
+        });
       }
 
-      if (trx.action === '-') {
-        _reFrame.forEach(r => {
-          if (r.day === _day)  r.total = r.total + 1
-        })
+      if (trx.action === "-") {
+        _reFrame.forEach((r) => {
+          if (r.day === _day) r.total = r.total + 1;
+        });
       }
     }
-  })
+  });
 
-  const finalFrame = reFrame.concat(_reFrame)
+  for (let i = 6; i >= 0; i--) {
+    if (reFrame[i].total === 0 && _reFrame[i].total === 0) {
+      _reFrame.splice(i, 1);
+      reFrame[i].dontDeleteMe = true;
+    }
+  }
 
-  res.status(200).send(finalFrame);
+  const finalFrame = reFrame.concat(_reFrame);
+
+  res.status(200).send({
+    userCount: count,
+    charts: finalFrame,
+  });
 });
 
 module.exports = router;

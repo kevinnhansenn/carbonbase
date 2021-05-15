@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
 import earth from "../../assets/earth.png";
 import styles from "./index.module.css";
@@ -17,86 +17,16 @@ import { Button, message, Popover, Spin } from "antd";
 import Modal from "antd/es/modal/Modal";
 import { request } from "../../api";
 
-var data = [
-  {
-    day: "Mon",
-    actions: 5,
-    type: "Lon",
-  },
-  {
-    day: "Tue",
-    actions: 4,
-    type: "Lon",
-  },
-  {
-    day: "Wed",
-    actions: 3,
-    type: "Lon",
-  },
-  {
-    day: "Thu",
-    actions: 5,
-    type: "Lon",
-  },
-  {
-    day: "Fri",
-    actions: 4,
-    type: "Lon",
-  },
-  {
-    day: "Sat",
-    actions: 6,
-    type: "Lon",
-  },
-  {
-    day: "Sun",
-    actions: 7,
-    type: "Lon",
-  },
-  {
-    day: "Mon",
-    actions: 3,
-    type: "Bor",
-  },
-  {
-    day: "Tue",
-    actions: 4,
-    type: "Bor",
-  },
-  {
-    day: "Wed",
-    actions: 3,
-    type: "Bor",
-  },
-  {
-    day: "Thu",
-    actions: 5,
-    type: "Bor",
-  },
-  {
-    day: "Fri",
-    actions: 4,
-    type: "Bor",
-  },
-  {
-    day: "Sat",
-    actions: 6,
-    type: "Bor",
-  },
-  {
-    day: "Sun",
-    actions: 20,
-    type: "Bor",
-  },
-];
-var config = {
-  data: data,
+const columnConfig = {
   padding: [65, 45, 40, 65],
   isStack: true,
   legend: false,
   xField: "day",
-  yField: "actions",
+  yField: "total",
   seriesField: "type",
+  yAxis: {
+    tickInterval: 1,
+  },
   color: ["#62DAAB", "#EF5350"],
   label: {
     style: {
@@ -111,6 +41,13 @@ var config = {
   },
 };
 
+const convertTime = (date) => {
+  if (process.env.NODE_ENV === "development") {
+    return date;
+  }
+  return new Date(new Date(Date.parse(date)).getTime() + 8 * 60 * 60 * 1000);
+};
+
 const previewStyle = {
   width: "90%",
 };
@@ -118,6 +55,10 @@ const previewStyle = {
 export function Dashboard({ setVerified, socket }) {
   const [result, setResult] = useState(null);
   const [action, setAction] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [noData, setNoData] = useState(false);
+  const [userCount, setUserCount] = useState(0);
+  const [charts, setCharts] = useState([]);
   const [addTooltip, setAddTooltip] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [transactionHistory, setTransactionHistory] = useState([]);
@@ -125,6 +66,29 @@ export function Dashboard({ setVerified, socket }) {
   const [deductTooltip, setDeductTooltip] = useState(false);
   const card = useRef(null);
   const [qrCodeScanner, setQrCodeScanner] = useState(false);
+
+  const apiRequest = () => {
+    request.get("/getDashboard").then((res) => {
+      const { userCount, charts } = res.data;
+      setUserCount(userCount);
+
+      const reMapped = charts.filter((c) => c.total > 0 || c.dontDeleteMe);
+
+      if (!reMapped.filter((r) => r.total > 0).length) setNoData(true);
+
+      setCharts(reMapped);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    apiRequest();
+    if (socket) {
+      socket.on("SOMEONE_JUST_REGISTER", (count) => {
+        setUserCount(count);
+      });
+    }
+  }, [socket]);
 
   const toggleState = () => {
     if (qrCodeScanner) {
@@ -143,7 +107,6 @@ export function Dashboard({ setVerified, socket }) {
   const handleScan = async (data) => {
     if (data) {
       try {
-        console.log(JSON.parse(data));
         setResult(JSON.parse(data));
       } catch (e) {
         message.error("Invalid QR Code");
@@ -177,6 +140,7 @@ export function Dashboard({ setVerified, socket }) {
         }
 
         setResult({ ...result, points: updatedPoint });
+        apiRequest();
         message.success("Success: Transaction Successful");
       }
     );
@@ -230,7 +194,6 @@ export function Dashboard({ setVerified, socket }) {
     setModalVisible(true);
     setHistoryLoading(true);
     request.get("/getHistory").then((res) => {
-      console.log(res.data);
       setTransactionHistory(res.data);
       setHistoryLoading(false);
     });
@@ -254,7 +217,7 @@ export function Dashboard({ setVerified, socket }) {
             <div>
               <div className={styles.userText}>REGISTERED USERS</div>
               <div className={styles.userNum}>
-                <CountUp end={200} />
+                {loading ? <Spin /> : <CountUp end={userCount} />}
               </div>
             </div>
           </div>
@@ -329,11 +292,15 @@ export function Dashboard({ setVerified, socket }) {
                     </Button>
                   </div>
                 </Fragment>
+              ) : loading ? (
+                <Spin />
               ) : (
                 <Fragment>
                   <img className={styles.earth} src={earth} alt="" />
                   <span className={styles.metric}>Engagement Metrics</span>
-                  <Column {...config} />
+                  {noData && <span className={styles.noData}>No Data</span>}
+
+                  <Column {...columnConfig} data={charts} />
                 </Fragment>
               )}
             </div>
@@ -375,31 +342,37 @@ export function Dashboard({ setVerified, socket }) {
           </div>
         ) : (
           <div>
-            {transactionHistory.map((trx) => {
-              return (
-                <div key={trx.date} style={{ marginBottom: "15px" }}>
-                  <div style={{ fontWeight: "bold" }}>{trx.date}</div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>{trx.name}</div>
+            {transactionHistory.length ? (
+              transactionHistory.map((trx) => {
+                return (
+                  <div key={trx.date} style={{ marginBottom: "15px" }}>
+                    <div style={{ fontWeight: "bold" }}>
+                      {convertTime(trx.date)}
+                    </div>
                     <div
-                      style={
-                        trx.action === "+"
-                          ? { color: "green", fontWeight: "bold" }
-                          : { color: "red", fontWeight: "bold" }
-                      }
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      {trx.action}
-                      {trx.amount}
+                      <div>{trx.name}</div>
+                      <div
+                        style={
+                          trx.action === "+"
+                            ? { color: "green", fontWeight: "bold" }
+                            : { color: "red", fontWeight: "bold" }
+                        }
+                      >
+                        {trx.action}
+                        {trx.amount}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <span className={styles.noData}>No Data</span>
+            )}
           </div>
         )}
       </Modal>

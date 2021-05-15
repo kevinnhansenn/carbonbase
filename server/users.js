@@ -30,6 +30,18 @@ const addUser = ({ name, email, password }) => {
   };
   users.push(newUser);
 
+  let now = new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString(
+    "en-HK"
+  );
+
+  if (process.env.NODE_ENV === "development") {
+    now = new Date().toLocaleString("en-HK");
+  }
+
+  console.log(`\nTime: ${now}`);
+  console.log("NEW USER:");
+  console.log(newUser);
+
   return newUser;
 };
 

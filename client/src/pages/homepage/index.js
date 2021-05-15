@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import CountUp from "react-countup";
 import QrCode from "qrcode.react";
 import earth from "../../assets/earth.png";
@@ -25,6 +25,7 @@ export function Homepage() {
   const [account, setAccount] = useState({});
   const [qrCode, setQrCode] = useState(false);
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const _account = localStorage.getItem("account");
@@ -93,6 +94,14 @@ export function Homepage() {
       });
     }
   }, [socket, account, qrCode]);
+
+  useEffect(() => {
+    if (location && socket) {
+      if (location.state.justRegister) {
+        socket.emit("JUST_REGISTER");
+      }
+    }
+  }, [location, socket]);
 
   const logout = () => {
     localStorage.clear();

@@ -1,8 +1,8 @@
 const app = require("express")();
 const http = require("http").Server(app);
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const Router = require("./router");
+const { getAllUsers } = require("./users");
 const { updatePoints } = require("./users");
 const { getUserById } = require("./users");
 const { getSocketIdByUserId } = require("./users");
@@ -11,19 +11,29 @@ const { removeSocketId } = require("./users");
 const { registerSocketId } = require("./users");
 const PORT = process.env.PORT || 5000;
 
+if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
+  const cors = require("cors");
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+  );
+}
+
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
 app.use(Router);
 
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "http://localhost:3000",
-  },
-});
+let option = {};
+
+if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
+  option = {
+    cors: {
+      origin: "http://localhost:3000",
+    },
+  };
+}
+
+const io = require("socket.io")(http, option);
 
 io.on("connection", (socket) => {
   const id = socket.id;
@@ -52,6 +62,10 @@ io.on("connection", (socket) => {
       });
       cb();
     }
+  });
+
+  socket.on("JUST_REGISTER", () => {
+    io.emit("SOMEONE_JUST_REGISTER", getAllUsers().length);
   });
 
   socket.on("disconnect", () => {
