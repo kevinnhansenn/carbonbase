@@ -11,11 +11,11 @@ const { frame, dayMap } = require("./utils");
 const router = express.Router();
 
 router.get(/(\/home)|(\/admin)|(\/)$/, (req, res, next) => {
-  router.use(express.static(path.join(__dirname, "../client/build/")));
+  router.use(express.static(path.join(__dirname, "../build/")));
 
   const staticFile = "index.html";
   const options = {
-    root: path.join(__dirname, "../client/build"),
+    root: path.join(__dirname, "../build"),
   };
 
   res.sendFile(staticFile, options, (err) => {
