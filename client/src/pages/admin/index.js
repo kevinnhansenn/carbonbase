@@ -3,11 +3,13 @@ import styles from "./index.module.css";
 import { Button, Input, message } from "antd";
 import { Dashboard } from "../dashboard";
 import io from "socket.io-client";
+import { useHistory } from "react-router-dom";
 
 export function Admin() {
   const codeRef = useRef(null);
   const [socket, setSocket] = useState(null);
   const [verified, setVerified] = useState(false);
+  const history = useHistory();
 
   const verify = () => {
     setVerified(true);
@@ -49,7 +51,9 @@ export function Admin() {
         <Dashboard setVerified={setVerified} socket={socket} />
       ) : (
         <div className={styles.container}>
-          <div className={styles.title}>Carbonbase</div>
+          <div className={styles.title} onClick={() => history.push("/")}>
+            Carbonbase
+          </div>
           <div className={styles.subtitle}>ADMIN PORTAL</div>
 
           <div className={styles.email}>

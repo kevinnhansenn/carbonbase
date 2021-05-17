@@ -64,7 +64,9 @@ export function Authentication() {
   return (
     <div className={"App-Page"}>
       <div className={styles.container}>
-        <div className={styles.title}>Carbonbase</div>
+        <div className={styles.title} onClick={() => history.push("/admin")}>
+          Carbonbase
+        </div>
         <div className={styles.subtitle}>
           {login ? "ACCOUNT LOGIN" : "REGISTER ACCOUNT"}
         </div>
